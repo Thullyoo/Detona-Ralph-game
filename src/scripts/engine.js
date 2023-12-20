@@ -46,13 +46,32 @@ function addListenerHitBox() {
           state.view.score.textContent = state.values.result;
           state.values.hitPosition = null;
           playSound("hit");
-        } else{
-            addListenerError();
+        } else {
+            if(state.view.lifeLeft.textContent > 0){
+                state.values.lifes--; 
+                state.view.lifeLeft.textContent = state.values.lifes;
+                playSound("error");
+            } else {
+                clearInterval(state.actions.countDownTimerId);
+                clearInterval(state.actions.timerId);
+                alert("Você perdeu! O seu resultado foi: " + state.values.result);
+                reset();
+            }
+            
         }
         
       });
     });
   }
+const reset = () => {
+    state.values.result = 0;   
+    state.view.score.textContent = state.values.result;
+    state.values.currentTime = 60;
+    state.view.lifeLeft.textContent = 3;
+    state.values.lifes = 3;
+    state.actions.timerId = setInterval(randomSquare, 1000);
+    state.actions.countDownTimerId = setInterval(countDown, 1000);
+}
 function playSound(sound){
     let audio = new Audio(`./src/audios/${sound}.m4a`)
     audio.volume = 0.3;
